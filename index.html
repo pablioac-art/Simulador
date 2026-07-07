@@ -437,9 +437,87 @@ footer{
   line-height:1.6;
   padding: 0 20px;
 }
+
+.password-gate{
+  position:fixed; inset:0;
+  background: var(--bg);
+  display:flex; align-items:center; justify-content:center;
+  z-index:1000;
+  padding:20px;
+}
+.password-box{
+  max-width:380px;
+  width:100%;
+  text-align:center;
+}
+.password-box .eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color: var(--gold-deep);
+  margin-bottom:14px;
+}
+.password-box h2{
+  font-family:'Fraunces',serif;
+  font-weight:500;
+  font-size:26px;
+  color: var(--ivory);
+  margin:0 0 22px;
+}
+.password-box input{
+  width:100%;
+  background: var(--bg-panel);
+  border:1px solid var(--line);
+  border-radius:3px;
+  padding:14px 16px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:15px;
+  color: var(--ivory);
+  text-align:center;
+  outline:none;
+  margin-bottom:14px;
+  box-sizing:border-box;
+}
+.password-box input:focus{ border-color: var(--gold); }
+.password-box button{
+  width:100%;
+  background: var(--gold);
+  color: var(--bg-deep);
+  border:none;
+  border-radius:3px;
+  padding:14px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  font-weight:500;
+  cursor:pointer;
+}
+.password-box .error-msg{
+  color:#c96a5c;
+  font-size:12.5px;
+  margin-top:12px;
+  font-family:'IBM Plex Mono',monospace;
+  display:none;
+}
+.password-box .error-msg.show{ display:block; }
+#appContent{ display:none; }
 </style>
 </head>
 <body>
+
+<div class="password-gate" id="passwordGate">
+  <div class="password-box">
+    <div class="eyebrow">Atelier Pablio Caetano — NL Light Refraction</div>
+    <h2>Acesso ao Simulador</h2>
+    <input type="password" id="passwordInput" placeholder="Senha de acesso" autocomplete="off">
+    <button id="passwordSubmit">Entrar</button>
+    <div class="error-msg" id="passwordError">Senha incorreta. Tente novamente.</div>
+  </div>
+</div>
+
+<div id="appContent">
 
 <header>
   <div class="eyebrow" id="txtEyebrow">Atelier Pablio Caetano — NL Light Refraction</div>
@@ -539,6 +617,8 @@ footer{
 
 <footer id="txtFooter">Atelier Pablio Caetano · Interpretação sobre execução</footer>
 
+</div>
+
 <script>
 /* =========================================================
    I18N — PT / EN / ES
@@ -553,7 +633,7 @@ const I18N = {
     lblTranslucency: "Pastilha — translucidez", lblIngotShade: "Pastilha — cor", lblCement: "Cimento",
     opticalTitle: "Montagem do caso — preparo + cimento + pastilha = cor final",
     exTitle: "Leitura do caso",
-    disclaimer: "Ferramenta educativa baseada em experiência clínica de bancada e comportamento óptico documentado do dissilicato de lítio. Não substitui prova de cor com try-in nem julgamento clínico individual.",
+    disclaimer: "O simulador serve como orientação e referência para a escolha dos materiais. O resultado real pode variar conforme a marca e o tipo de dissilicato utilizado, a técnica de estratificação ou maquiagem aplicada, a marca do cimento, e o polimento realizado. Ainda assim, usado antes da cimentação, o simulador entrega um caminho de decisão muito mais previsível do que a escolha às cegas. Não substitui prova de cor com try-in nem julgamento clínico individual.",
     footer: "Atelier Pablio Caetano · Interpretação sobre execução",
     challengeTitle: "Caso clínico", challengeGenericTitle: "Desafio",
     checkBtn: "Verificar minha escolha", newBtn: "Novo caso",
@@ -606,7 +686,7 @@ const I18N = {
     lblTranslucency: "Ingot — translucency", lblIngotShade: "Ingot — shade", lblCement: "Cement",
     opticalTitle: "Case build-up — prep + cement + ingot = final shade",
     exTitle: "Case reading",
-    disclaimer: "Educational tool based on clinical bench experience and documented optical behavior of lithium disilicate. It does not replace shade try-in or individual clinical judgment.",
+    disclaimer: "This simulator serves as guidance and reference for material selection. The actual result may vary depending on the brand and type of lithium disilicate used, the layering or staining technique applied, the cement brand, and the polishing performed. Even so, used before cementation, the simulator delivers a far more predictable decision path than choosing blindly. It does not replace shade try-in or individual clinical judgment.",
     footer: "Atelier Pablio Caetano · Interpretation over execution",
     challengeTitle: "Clinical case", challengeGenericTitle: "Challenge",
     checkBtn: "Check my choice", newBtn: "New case",
@@ -659,7 +739,7 @@ const I18N = {
     lblTranslucency: "Pastilla — translucidez", lblIngotShade: "Pastilla — color", lblCement: "Cemento",
     opticalTitle: "Armado del caso — preparo + cemento + pastilla = color final",
     exTitle: "Lectura del caso",
-    disclaimer: "Herramienta educativa basada en experiencia clínica de banco y en el comportamiento óptico documentado del disilicato de litio. No sustituye la prueba de color con try-in ni el juicio clínico individual.",
+    disclaimer: "El simulador sirve como orientación y referencia para la elección de los materiales. El resultado real puede variar según la marca y el tipo de disilicato utilizado, la técnica de estratificación o maquillaje aplicada, la marca del cemento y el pulido realizado. Aun así, utilizado antes de la cementación, el simulador ofrece un camino de decisión mucho más previsible que elegir a ciegas. No sustituye la prueba de color con try-in ni el juicio clínico individual.",
     footer: "Atelier Pablio Caetano · Interpretación sobre ejecución",
     challengeTitle: "Caso clínico", challengeGenericTitle: "Desafío",
     checkBtn: "Verificar mi elección", newBtn: "Nuevo caso",
@@ -712,7 +792,7 @@ const I18N = {
     lblTranslucency: "Pastille — translucidité", lblIngotShade: "Pastille — teinte", lblCement: "Ciment",
     opticalTitle: "Construction du cas — préparation + ciment + pastille = teinte finale",
     exTitle: "Lecture du cas",
-    disclaimer: "Outil pédagogique basé sur l'expérience clinique de laboratoire et le comportement optique documenté du disilicate de lithium. Ne remplace pas l'essai de teinte ni le jugement clinique individuel.",
+    disclaimer: "Le simulateur sert de guide et de référence pour le choix des matériaux. Le résultat réel peut varier selon la marque et le type de disilicate utilisé, la technique de stratification ou de maquillage appliquée, la marque du ciment, et le polissage réalisé. Malgré tout, utilisé avant la cimentation, le simulateur offre une trajectoire de décision bien plus prévisible qu'un choix à l'aveugle. Il ne remplace pas l'essai de teinte ni le jugement clinique individuel.",
     footer: "Atelier Pablio Caetano · L'interprétation avant l'exécution",
     challengeTitle: "Cas clinique", challengeGenericTitle: "Défi",
     checkBtn: "Vérifier mon choix", newBtn: "Nouveau cas",
@@ -765,7 +845,7 @@ const I18N = {
     lblTranslucency: "Rohling — Transluzenz", lblIngotShade: "Rohling — Farbe", lblCement: "Zement",
     opticalTitle: "Fallaufbau — Präparation + Zement + Rohling = Endfarbe",
     exTitle: "Fallauswertung",
-    disclaimer: "Lehrmittel auf Basis klinischer Labor­erfahrung und dokumentierten optischen Verhaltens von Lithiumdisilikat. Ersetzt keine Farbanprobe oder individuelle klinische Beurteilung.",
+    disclaimer: "Der Simulator dient als Orientierung und Referenz für die Materialauswahl. Das tatsächliche Ergebnis kann je nach Marke und Art des verwendeten Lithiumdisilikats, der angewandten Schicht- oder Malfarbentechnik, der Zementmarke und der durchgeführten Politur abweichen. Dennoch bietet der Simulator, vor der Zementierung eingesetzt, einen deutlich vorhersehbareren Entscheidungsweg als eine Wahl ins Blaue hinein. Er ersetzt keine Farbanprobe oder individuelle klinische Beurteilung.",
     footer: "Atelier Pablio Caetano · Interpretation vor Ausführung",
     challengeTitle: "Klinischer Fall", challengeGenericTitle: "Herausforderung",
     checkBtn: "Meine Wahl prüfen", newBtn: "Neuer Fall",
@@ -818,7 +898,7 @@ const I18N = {
     lblTranslucency: "Pastiglia — translucenza", lblIngotShade: "Pastiglia — colore", lblCement: "Cemento",
     opticalTitle: "Costruzione del caso — moncone + cemento + pastiglia = colore finale",
     exTitle: "Lettura del caso",
-    disclaimer: "Strumento didattico basato sull'esperienza clinica di laboratorio e sul comportamento ottico documentato del disilicato di litio. Non sostituisce la prova colore né il giudizio clinico individuale.",
+    disclaimer: "Il simulatore serve come orientamento e riferimento per la scelta dei materiali. Il risultato reale può variare in base alla marca e al tipo di disilicato utilizzato, alla tecnica di stratificazione o pittura applicata, alla marca del cemento e alla lucidatura eseguita. Ciononostante, utilizzato prima della cementazione, il simulatore offre un percorso decisionale molto più prevedibile rispetto a una scelta alla cieca. Non sostituisce la prova colore né il giudizio clinico individuale.",
     footer: "Atelier Pablio Caetano · Interpretazione sopra l'esecuzione",
     challengeTitle: "Caso clinico", challengeGenericTitle: "Sfida",
     checkBtn: "Verifica la mia scelta", newBtn: "Nuovo caso",
@@ -871,7 +951,7 @@ const I18N = {
     lblTranslucency: "Заготовка — транслюцентность", lblIngotShade: "Заготовка — цвет", lblCement: "Цемент",
     opticalTitle: "Сборка случая — препарирование + цемент + заготовка = итоговый цвет",
     exTitle: "Анализ случая",
-    disclaimer: "Образовательный инструмент, основанный на клиническом опыте зуботехнической лаборатории и задокументированном оптическом поведении дисиликата лития. Не заменяет примерку цвета или индивидуальное клиническое суждение.",
+    disclaimer: "Симулятор служит ориентиром и справочным материалом для выбора материалов. Фактический результат может отличаться в зависимости от бренда и типа используемого дисиликата, техники наслоения или окрашивания, бренда цемента и выполненной полировки. Тем не менее, при использовании перед фиксацией симулятор даёт гораздо более предсказуемый путь принятия решения, чем выбор вслепую. Он не заменяет примерку цвета или индивидуальное клиническое суждение.",
     footer: "Atelier Pablio Caetano · Интерпретация важнее исполнения",
     challengeTitle: "Клинический случай", challengeGenericTitle: "Вызов",
     checkBtn: "Проверить мой выбор", newBtn: "Новый случай",
@@ -924,7 +1004,7 @@ const I18N = {
     lblTranslucency: "瓷块 — 透光度", lblIngotShade: "瓷块 — 颜色", lblCement: "粘接剂",
     opticalTitle: "病例构成 — 预备体 + 粘接剂 + 瓷块 = 最终颜色",
     exTitle: "病例解读",
-    disclaimer: "本工具基于临床技工室经验及二硅酸锂已记录的光学行为，仅用于教学目的，不能替代试色或个体临床判断。",
+    disclaimer: "本模拟器用作材料选择的参考和指导。实际结果可能因所用二硅酸锂的品牌和类型、分层或染色技术、粘接剂品牌以及抛光工艺而有所不同。尽管如此，在粘接前使用本模拟器，仍能提供比盲目选择更可预测的决策路径。本工具不能替代试色或个体临床判断。",
     footer: "Atelier Pablio Caetano · 诠释先于执行",
     challengeTitle: "临床病例", challengeGenericTitle: "挑战",
     checkBtn: "验证我的选择", newBtn: "新病例",
@@ -977,7 +1057,7 @@ const I18N = {
     lblTranslucency: "インゴット — 透光性", lblIngotShade: "インゴット — 色調", lblCement: "セメント",
     opticalTitle: "症例構成 — 形成歯 + セメント + インゴット = 最終色調",
     exTitle: "症例の読み解き",
-    disclaimer: "本ツールは臨床技工経験と二ケイ酸リチウムの光学的挙動に関する報告に基づく教育用ツールです。試適や個々の臨床的判断に代わるものではありません。",
+    disclaimer: "本シミュレーターは、材料選択の指針および参考資料として機能します。実際の結果は、使用する二ケイ酸リチウムのメーカーや種類、積層・染色のテクニック、セメントのメーカー、研磨の仕上げによって変わる場合があります。それでも、合着前に使用することで、当てずっぽうで選ぶよりもはるかに予測可能な判断の道筋を得られます。試適や個々の臨床的判断に代わるものではありません。",
     footer: "Atelier Pablio Caetano · 実行より解釈を",
     challengeTitle: "臨床症例", challengeGenericTitle: "チャレンジ",
     checkBtn: "選択を確認する", newBtn: "新しい症例",
@@ -1030,7 +1110,7 @@ const I18N = {
     lblTranslucency: "잉곳 — 투광도", lblIngotShade: "잉곳 — 색상", lblCement: "시멘트",
     opticalTitle: "케이스 구성 — 형성치아 + 시멘트 + 잉곳 = 최종 색상",
     exTitle: "케이스 분석",
-    disclaimer: "본 도구는 임상 기공 경험과 이규산리튬의 문서화된 광학적 특성을 기반으로 한 교육용 도구입니다. 시적(try-in)이나 개별 임상 판단을 대체하지 않습니다.",
+    disclaimer: "본 시뮬레이터는 재료 선택을 위한 지침 및 참고 자료로 사용됩니다. 실제 결과는 사용하는 이규산리튬의 브랜드와 종류, 적용된 적층 또는 착색 기법, 시멘트 브랜드, 그리고 시행된 연마에 따라 달라질 수 있습니다. 그럼에도 불구하고 합착 전에 사용하면, 무작정 선택하는 것보다 훨씬 더 예측 가능한 의사결정 경로를 제공합니다. 시적(try-in)이나 개별 임상 판단을 대체하지 않습니다.",
     footer: "Atelier Pablio Caetano · 실행보다 해석",
     challengeTitle: "임상 케이스", challengeGenericTitle: "챌린지",
     checkBtn: "내 선택 확인하기", newBtn: "새 케이스",
@@ -1083,7 +1163,7 @@ const I18N = {
     lblTranslucency: "القالب — الشفافية", lblIngotShade: "القالب — اللون", lblCement: "الأسمنت",
     opticalTitle: "بناء الحالة — التحضير + الأسمنت + القالب = اللون النهائي",
     exTitle: "قراءة الحالة",
-    disclaimer: "أداة تعليمية مبنية على الخبرة السريرية للمخبر والسلوك البصري الموثق لثنائي سيليكات الليثيوم. لا تغني عن تجربة اللون السريرية أو الحكم السريري الفردي.",
+    disclaimer: "يُستخدم المحاكي كدليل ومرجع لاختيار المواد. قد تختلف النتيجة الفعلية باختلاف العلامة التجارية ونوع ثنائي السيليكات المستخدم، وتقنية الطبقات أو التلوين المطبقة، والعلامة التجارية للأسمنت، والتلميع المُنجز. ومع ذلك، عند استخدامه قبل التثبيت، يوفر المحاكي مسار قرار أكثر قابلية للتنبؤ بكثير من الاختيار العشوائي. لا يغني عن تجربة اللون السريرية أو الحكم السريري الفردي.",
     footer: "Atelier Pablio Caetano · التفسير قبل التنفيذ",
     challengeTitle: "حالة سريرية", challengeGenericTitle: "تحدٍ",
     checkBtn: "تحقق من اختياري", newBtn: "حالة جديدة",
@@ -1136,7 +1216,7 @@ const I18N = {
     lblTranslucency: "Ένθεμα — διαφάνεια", lblIngotShade: "Ένθεμα — χρώμα", lblCement: "Τσιμέντο",
     opticalTitle: "Δομή περίπτωσης — παρασκευή + τσιμέντο + ένθεμα = τελικό χρώμα",
     exTitle: "Ανάγνωση περίπτωσης",
-    disclaimer: "Εκπαιδευτικό εργαλείο βασισμένο σε κλινική εργαστηριακή εμπειρία και τεκμηριωμένη οπτική συμπεριφορά του δισιλικιούχου λιθίου. Δεν αντικαθιστά τη δοκιμή χρώματος ούτε την ατομική κλινική κρίση.",
+    disclaimer: "Ο προσομοιωτής χρησιμεύει ως καθοδήγηση και σημείο αναφοράς για την επιλογή υλικών. Το πραγματικό αποτέλεσμα μπορεί να διαφέρει ανάλογα με τη μάρκα και τον τύπο του δισιλικιούχου λιθίου που χρησιμοποιείται, την τεχνική στρωματοποίησης ή χρωματισμού που εφαρμόζεται, τη μάρκα του τσιμέντου και τη στίλβωση που πραγματοποιείται. Παρ' όλα αυτά, όταν χρησιμοποιείται πριν την τσιμέντωση, ο προσομοιωτής προσφέρει μια πολύ πιο προβλέψιμη πορεία απόφασης σε σχέση με μια τυχαία επιλογή. Δεν αντικαθιστά τη δοκιμή χρώματος ούτε την ατομική κλινική κρίση.",
     footer: "Atelier Pablio Caetano · Η ερμηνεία πάνω από την εκτέλεση",
     challengeTitle: "Κλινική περίπτωση", challengeGenericTitle: "Πρόκληση",
     checkBtn: "Έλεγχος επιλογής μου", newBtn: "Νέα περίπτωση",
@@ -1630,6 +1710,26 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 
 applyStaticLanguage();
 update();
+
+/* ---------- Tela de senha ---------- */
+const SITE_PASSWORD = "nllight2026"; // EDITE AQUI para trocar a senha
+function checkPassword(){
+  const input = document.getElementById('passwordInput');
+  const val = input.value.trim().toLowerCase();
+  if(val === SITE_PASSWORD.toLowerCase()){
+    document.getElementById('passwordGate').style.display = 'none';
+    document.getElementById('appContent').style.display = 'block';
+  } else {
+    document.getElementById('passwordError').classList.add('show');
+    input.value = '';
+    input.focus();
+  }
+}
+document.getElementById('passwordSubmit').addEventListener('click', checkPassword);
+document.getElementById('passwordInput').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') checkPassword();
+});
+document.getElementById('passwordInput').focus();
 </script>
 </body>
 </html>
