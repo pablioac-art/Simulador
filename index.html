@@ -1286,13 +1286,15 @@ const VITA_HEX = {
   "A1":"#f2e8d5","A2":"#eddcbd","A3":"#e5cda3","A3.5":"#d9bb88","A4":"#c9a670",
   "B1":"#f4ecd9","B2":"#eee0bc","B3":"#e2cd97","B4":"#d3b878",
   "C1":"#dcd5c3","C2":"#cec4ab","C3":"#bcb093","C4":"#a6997c",
-  "D2":"#ddd2bd","D3":"#cfc2a6","D4":"#bfb08f"
+  "D2":"#ddd2bd","D3":"#cfc2a6","D4":"#bfb08f",
+  "MO0":"#e8dcc4","MO1":"#ddd0b0","HO0":"#eee4d0"
 };
 
 // Valor relativo (brilho) aproximado de cada cor — quanto maior, mais claro
 const VITA_VALUE = {
   "BL1":12,"BL2":11.5,"BL3":11,"BL4":10.5,
-  "B1":10,"A1":9.5,"B2":8.5,"D2":8,"A2":8,"C1":7.5,"C2":7,"D3":6.5,"A3":6.5,"D4":6,"B3":6,"A3.5":5,"B4":5,"C3":4.5,"A4":4,"C4":3
+  "B1":10,"A1":9.5,"B2":8.5,"D2":8,"A2":8,"C1":7.5,"C2":7,"D3":6.5,"A3":6.5,"D4":6,"B3":6,"A3.5":5,"B4":5,"C3":4.5,"A4":4,"C4":3,
+  "MO0":8.5,"MO1":7.5,"HO0":9
 };
 
 // Croma relativo — quanto maior, mais saturado
@@ -1301,10 +1303,15 @@ const VITA_CHROMA = {
   "A1":2,"A2":4,"A3":6,"A3.5":7.5,"A4":9,
   "B1":1.5,"B2":3.5,"B3":6,"B4":8,
   "C1":2,"C2":3.5,"C3":5,"C4":6.5,
-  "D2":2.5,"D3":4,"D4":5.5
+  "D2":2.5,"D3":4,"D4":5.5,
+  "MO0":2,"MO1":3,"HO0":1.5
 };
 
-function familyOf(shade){ return shade.replace(/[0-9.]/g,''); }
+// MO0/MO1/HO0 são pastilhas opacas de core/infraestrutura — não têm família própria
+// na escala Vita; para efeito de mistura de cor, comportam-se dentro da família A.
+const PSEUDO_FAMILY = { "MO0":"A", "MO1":"A", "HO0":"A" };
+
+function familyOf(shade){ return PSEUDO_FAMILY[shade] || shade.replace(/[0-9.]/g,''); }
 function stepOf(shade){ return parseFloat(shade.replace(/[A-D]/,'')); }
 
 // Fator de "penetração" do substrato por translucidez (peça fina, ~0,3mm)
@@ -1568,12 +1575,23 @@ function renderFlow(r){
   `;
 }
 
+const INGOT_OPTIONS_BY_TRANSLUCENCY = {
+  MO: ["MO0","MO1"],
+  HO: ["HO0"]
+};
+const DEFAULT_INGOT_OPTIONS = ["BL1","BL2","BL3","BL4","A1","A2","A3","B1","B2","C1","D2"];
+
 function update(){
   const r = predict();
 
   renderChips('substrateChips', VITA, state.substrate, v => state.substrate = v);
-  renderChips('translucencyChips', ["HT","MT","LT","MO","HO"], state.translucency, v => state.translucency = v);
-  renderChips('ingotShadeChips', ["BL1","BL2","BL3","BL4","A1","A2","A3","B1","B2","C1","D2"], state.ingotShade, v => state.ingotShade = v);
+  renderChips('translucencyChips', ["HT","MT","LT","MO","HO"], state.translucency, v => {
+    state.translucency = v;
+    const opts = INGOT_OPTIONS_BY_TRANSLUCENCY[v] || DEFAULT_INGOT_OPTIONS;
+    if(!opts.includes(state.ingotShade)) state.ingotShade = opts[0];
+  });
+  const ingotOptions = INGOT_OPTIONS_BY_TRANSLUCENCY[state.translucency] || DEFAULT_INGOT_OPTIONS;
+  renderChips('ingotShadeChips', ingotOptions, state.ingotShade, v => state.ingotShade = v);
   renderChips('cementChips', CEMENTS, state.cement, v => state.cement = v, (item) => cemLabel(item.id));
 
   document.getElementById('subVal').textContent = state.substrate;
